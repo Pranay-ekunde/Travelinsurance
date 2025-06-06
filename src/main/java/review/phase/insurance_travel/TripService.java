@@ -12,7 +12,7 @@ public class TripService {
     @Autowired
     private tripRepository tripRepo;
     @Autowired
-    private CoverageService service;
+    private CoverageRepository service;
 
     // Create a new trip
     public trip createTrip(trip trip) {
@@ -21,7 +21,7 @@ public class TripService {
 
     // Retrieve all trips
     public List<trip> getAllTrips() {
-        return tripRepo.findAll();
+        return (List<trip>) tripRepo.findAll();
     }
 
     // Retrieve trip by ID
@@ -46,7 +46,7 @@ public class TripService {
     public trip updatingAndCalculating(TripRequest tripRequest){
         long total = 0;
         for (Long long1 : tripRequest.getSelectedCoverageIds()) {
-            total+=service.readById(long1).getAmount();
+            total+=service.findById(long1).get().getAmount();
         }
         total+=(total*0.180);
         trip tr = tripRepo.findById(tripRequest.getTripId()).orElse(null);
@@ -63,4 +63,5 @@ public class TripService {
         }
         return false;
     }
+
 }
